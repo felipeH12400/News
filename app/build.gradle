@@ -7,7 +7,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "cl.ucn.disc.dsm.durrutia.cl.ucn.news"
+        applicationId "cl.ucn.disc.dsm.fherrera.news"
         minSdkVersion 26
         targetSdkVersion 30
         versionCode 1
