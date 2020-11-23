@@ -1,6 +1,10 @@
 package cl.ucn.disc.dsm.fherrera.news.model;
 
+import net.openhft.hashing.LongHashFunction;
+
 import org.threeten.bp.ZonedDateTime;
+
+import cl.ucn.disc.dsm.fherrera.news.utils.Validations;
 
 
 public final class News {
@@ -52,8 +56,6 @@ public final class News {
 
     /**
      * The Constructor
-     *
-     * @param id
      * @param title
      * @param source
      * @param author
@@ -63,9 +65,15 @@ public final class News {
      * @param content
      * @param publishedAt
      */
-    public News(Long id, String title, String source, String author, String url, String urlImage, String description, String content, ZonedDateTime publishedAt) {
-
-        this.id = id;
+    public News(String title, String source, String author, String url, String urlImage, String description, String content, ZonedDateTime publishedAt) {
+        //Validation
+        Validations.MinSize(title,2,"title");
+        Validations.MinSize(source,2,"source");
+        Validations.MinSize(author,2,"author");
+        Validations.notNull(content, "Content");
+        Validations.notNull(publishedAt, "PublishedAt");
+        //xxhashing
+        this.id = LongHashFunction.xx().hashChars(title + "|" + source + "|" +  author);
         this.title = title;
         this.source = source;
         this.author = author;

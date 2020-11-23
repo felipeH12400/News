@@ -54,4 +54,7 @@ dependencies {
     // Apache commons lang
     implementation 'org.apache.commons:commons-lang3:3.11'
 
+    //Hash function
+    implementation 'net.openhft:zero-allocation-hashing:0.12'
+
 }
