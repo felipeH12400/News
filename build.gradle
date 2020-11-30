@@ -1,3 +1,17 @@
+//date formats
+def YEAR_WEEK = new Date().format("yyww").toInteger()
+def DAY = new Date().format("u").toInteger()
+def HOUR_MINUTE = new Date().format("HHmm").toInteger()
+//time
+def BUILD_TIME = 100000 * YEAR_WEEK + 10000 * DAY + HOUR_MINUTE
+//Versioning
+def Major = 1
+def Minor = 0
+def Patch = BUILD_TIME
+//Build version using GODS
+def BUILD_VERSION = "Zeus-${Major}.${Minor}.${Patch}"
+//version pluggin
+apply plugin: 'com.github.ben-manes.versions'
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
@@ -6,6 +20,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.1.1'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.36.0'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -13,6 +28,14 @@ buildscript {
 }
 
 allprojects {
+
+    ext.buildTimestamp = BUILD_TIME
+    ext.Version = BUILD_VERSION
+
+    //directory
+    buildDir = "${System.env.TEMP}//gradle-build//${rootProject.name}//${project.name}"
+    logger.lifecycle("Versions(${BUILD_VERSION}) BuildDir(${buildDir})")
+
     repositories {
         google()
         jcenter()
