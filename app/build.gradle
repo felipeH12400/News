@@ -71,6 +71,7 @@ dependencies {
     // SLF4J
     implementation 'org.slf4j:slf4j-api:1.7.30'
     implementation 'org.slf4j:slf4j-simple:1.7.30'
+    implementation 'com.github.tony19:logback-android:2.0.0'
 
     // Java Faker
     implementation 'com.github.javafaker:javafaker:1.0.2'
@@ -88,5 +89,9 @@ dependencies {
     implementation "com.squareup.okio:okio:2.9.0"
     implementation "com.google.code.gson:gson:2.8.6"
     implementation "com.squareup.okhttp3:okhttp:4.9.0"
+
+    //fastadapter and recyclerview
+    implementation 'com.mikepenz:fastadapter:3.3.1'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
 }
