@@ -13,6 +13,11 @@ import org.threeten.bp.ZonedDateTime;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import cl.ucn.disc.dsm.fherrera.news.model.News;
 import cl.ucn.disc.dsm.fherrera.news.utils.Validations;
@@ -32,7 +37,7 @@ public final class ContractsImplNewsApi implements Contracts {
 
         boolean needFix = false;
 
-        if (article.getAuthor() == null) {
+        if (article.getAuthor() == null || article.getAuthor().length() == 0) {
             article.setAuthor("No author*");
             needFix = true;
         }
@@ -62,9 +67,14 @@ public final class ContractsImplNewsApi implements Contracts {
                 publishedAt
         );
     }
+    private static <T> Predicate<T> distintByKey(Function<? super T, ?> keyExtractor) {
+        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+
+    }
 
     @Override
-    public List<News> retrieveNews(Integer size) {
+    public List<News> retrieveNews(final Integer size) {
         try   {
             List<Article> articles = newsApiService.getTopHeadlines(
                     "technology", size);
@@ -72,7 +82,14 @@ public final class ContractsImplNewsApi implements Contracts {
             for(Article article : articles) {
             news.add(toNews(article));
             }
-            return news;
+            return news.stream()
+                    .filter(distintByKey(News::getId))
+                    .sorted((k1, k2) -> k2.getPublishedAt().compareTo(k1.getPublishedAt()))
+                    .collect(Collectors.toList());
+
+
+
+
         } catch (IOException ex) {
             log.error("Error", ex);
             return null;
@@ -82,7 +99,7 @@ public final class ContractsImplNewsApi implements Contracts {
     }
 
     @Override
-    public void saveNews(News news) {
+    public void saveNews(final News news) {
         throw new NotImplementedException("Can't save in NewsAPI");
 
     }
